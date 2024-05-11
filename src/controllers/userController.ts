@@ -1,7 +1,7 @@
 import express, { Request, Response } from "express";
 import bcrypt from "bcrypt";
 import jwt from "jsonwebtoken";
-import User from "../models/user";
+import User from "../models/User";
 
 export const register = async (req: Request, res: Response) => {
   const { email, password, mobileNumber, userName } = req.body;
@@ -34,9 +34,14 @@ export const login = async (req: Request, res: Response) => {
       return res.status(401).json({ message: "Invalid credentials" });
     }
     // Generate JWT token
-    const token = jwt.sign({ userId: user.id }, "your_secret_key", {
-      expiresIn: "1h",
-    });
+
+    const token = jwt.sign(
+      { userId: user.id },
+      process.env.SECRET_KEY as string,
+      {
+        expiresIn: "1h",
+      }
+    );
     res.json({ token });
   } catch (error) {
     console.error(error);
