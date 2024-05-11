@@ -22,7 +22,7 @@ User.init(
       primaryKey: true,
     },
     mobileNumber: {
-      type: DataTypes.INTEGER,
+      type: DataTypes.BIGINT,
       allowNull: false,
     },
     userName: {
@@ -44,6 +44,7 @@ User.init(
     },
     // Add other fields as needed
   },
+
   {
     sequelize,
     modelName: "User",

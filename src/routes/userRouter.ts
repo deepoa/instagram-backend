@@ -9,6 +9,7 @@ const userRouter = express.Router();
 // });
 
 userRouter.post("/register-user", userController.register);
+userRouter.post("/login-user", userController.login);
 
 // userRouter.get("/:id", (req, res) => {
 //   // Get user by ID

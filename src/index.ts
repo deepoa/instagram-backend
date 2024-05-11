@@ -7,6 +7,7 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
 const port = process.env.PORT || 3000;
+require("dotenv").config();
 
 // app.get("/", (req: Request, res: Response) => {
 //   res.send({ data: "Hello this is Type script Poroject" });
