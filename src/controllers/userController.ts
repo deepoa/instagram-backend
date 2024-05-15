@@ -6,6 +6,15 @@ import User from "../models/User";
 export const register = async (req: Request, res: Response) => {
   const { email, password, mobileNumber, userName } = req.body;
   try {
+    const existingUserName = await User.findAll({
+      where: {
+        userName: userName,
+      },
+    });
+    if (existingUserName) {
+      return res.status(403).json({ message: "UserName already Exist" });
+    }
+
     const hashedPassword = await bcrypt.hash(password, 10);
     // Create a new user record in the database
     const user = await User.create({
@@ -46,5 +55,12 @@ export const login = async (req: Request, res: Response) => {
   } catch (error) {
     console.error(error);
     res.status(500).json({ message: "Internal Server Error" });
+  }
+};
+
+export const createProfile = () => {
+  try {
+  } catch (err) {
+    console.log(err);
   }
 };
