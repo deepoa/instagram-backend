@@ -12,6 +12,9 @@ require("dotenv").config();
 // app.get("/", (req: Request, res: Response) => {
 //   res.send({ data: "Hello this is Type script Poroject" });
 // });
+app.get("/", (req: Request, res: Response) => {
+  res.json({ message: "Welcome to Insta Backend APIs !" });
+});
 app.use("/", routes);
 
 sequelize.sync().then(() => {
