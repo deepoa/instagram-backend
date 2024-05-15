@@ -6,13 +6,18 @@ import User from "../models/User";
 export const register = async (req: Request, res: Response) => {
   const { email, password, mobileNumber, userName } = req.body;
   try {
+    // const existingEmail = await User.findAll;
+
     const existingUserName = await User.findAll({
       where: {
         userName: userName,
+        email: email,
       },
     });
     if (existingUserName) {
-      return res.status(403).json({ message: "UserName already Exist" });
+      return res
+        .status(403)
+        .json({ message: "UserName already Exist or Email already Exist " });
     }
 
     const hashedPassword = await bcrypt.hash(password, 10);
