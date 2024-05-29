@@ -22,28 +22,22 @@ User.init(
       primaryKey: true,
     },
     mobileNumber: {
-      type: DataTypes.BIGINT,
-      allowNull: false,
+      type: DataTypes.STRING,
+      allowNull: true,
     },
     userName: {
       type: DataTypes.STRING,
-      allowNull: false,
+      allowNull: true,
       unique: true,
     },
     email: {
       type: DataTypes.STRING,
-      allowNull: false,
+      allowNull: true,
       unique: true,
-      validate: {
-        isEmail: true,
-      },
-
-
-      
     },
     password: {
       type: DataTypes.STRING,
-      allowNull: false,
+      allowNull: true,
     },
     // Add other fields as needed
   },

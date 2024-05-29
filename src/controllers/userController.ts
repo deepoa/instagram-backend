@@ -2,33 +2,65 @@ import express, { Request, Response } from "express";
 import bcrypt from "bcrypt";
 import jwt from "jsonwebtoken";
 import User from "../models/User";
+import { z } from "zod";
+
+const UserSchema = z.object({
+  email: z.string().email(),
+  password: z.string().min(8),
+  mobileNumber: z
+    .string()
+    .regex(/^\d{10}$/)
+    .optional()
+    .nullable(),
+  userName: z.string().nonempty(),
+});
 
 export const register = async (req: Request, res: Response) => {
   const { email, password, mobileNumber, userName } = req.body;
-  try {
-    // const existingEmail = await User.findAll;
+  const validationResult = UserSchema.safeParse({
+    email,
+    password,
+    mobileNumber,
+    userName,
+  });
 
-    const existingUserName = await User.findAll({
+  if (!validationResult.success) {
+    // Return validation errors to the client
+    return res.status(400).json({ errors: validationResult.error.format() });
+  }
+  try {
+    const existingUserName = await User.findOne({
       where: {
         userName: userName,
-        email: email,
       },
     });
     if (existingUserName) {
-      return res
-        .status(403)
-        .json({ message: "UserName already Exist or Email already Exist " });
+      return res.status(403).json({ message: "UserName already Exist" });
+    }
+
+    const existingEmail = await User.findOne({
+      where: {
+        email: email,
+      },
+    });
+    if (existingEmail) {
+      return res.status(403).json({ message: " Email already Exist " });
     }
 
     const hashedPassword = await bcrypt.hash(password, 10);
     // Create a new user record in the database
-    const user = await User.create({
-      email,
-      password: hashedPassword,
-      mobileNumber,
-      userName,
-    });
-    res.status(200).json({ message: "User registered successfully", user });
+
+    if (!existingUserName && !existingEmail) {
+      const user = await User.create({
+        email: email,
+        password: hashedPassword,
+        mobileNumber: mobileNumber,
+        userName: userName,
+      });
+      res.status(200).json({ message: "User registered successfully", user });
+    } else {
+      res.status(400).json({ message: "Fill all the details" });
+    }
   } catch (error) {
     console.error(error);
     res.status(500).json({ message: "Internal Server Error" });
